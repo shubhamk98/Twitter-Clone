@@ -2,6 +2,7 @@ import React from "react";
 import SectionOne from "./(components)/(SectionOne)/SectionOne";
 import SectionTwo from "./(components)/(SectionTwo)/SectionTwo";
 import SectionThree from "./(components)/(SectionThree)/SectionThree";
+import CreateTweet from "./(components)/(SectionTwo)/CreateTweet";
 
 const page = () => {
   return (
@@ -11,6 +12,7 @@ const page = () => {
           <SectionOne />
         </div>
         <div className="border-r-[1px] col-span-6 border-gray-400 dark:border-gray-800 overflow-scroll">
+          <CreateTweet/>
           <SectionTwo />
           <SectionTwo />
           <SectionTwo />

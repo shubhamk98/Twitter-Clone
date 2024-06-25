@@ -53,8 +53,8 @@ const SectionOne = () => {
               className="flex items-center space-x-2 mt-3 hover:bg-zinc-200  dark:hover:bg-zinc-800 
             hover:rounded-full w-fit h-fit p-3 pr-6 cursor-pointer gap-2"
             >
-              <item.icon className="text-zinc-950 dark:text-white" size={28} />
-              <p className="text-zinc-950 dark:text-white text-xl font-semibold">
+              <item.icon className="text-zinc-950 dark:text-white" size={26} />
+              <p className="text-zinc-950 dark:text-white text-lg font-semibold">
                 {item.val}
               </p>
             </div>
