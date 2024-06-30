@@ -8,6 +8,9 @@ import { FaRegImages } from "react-icons/fa6";
 import { BsStars } from "react-icons/bs";
 import { useCreateTweet } from "../../../../hooks/tweet";
 import toast from "react-hot-toast";
+import { graphqlClient } from "../../../../gClient/api";
+import { getSignedUrlForTweetQuery } from "../../../../graphql/query/tweet";
+import axios from "axios";
 
 const aiLink = process.env.NEXT_PUBLIC_GoogleAILink;
 
@@ -15,6 +18,7 @@ const CreateTweet = () => {
   const { user } = useCurrentUser();
   const [content, setContent] = useState("");
   const { mutate } = useCreateTweet();
+  const [imageURL, setImageURL] = useState("");
 
   const handleAIText = async () => {
     const baseString =
@@ -49,19 +53,54 @@ const CreateTweet = () => {
       .catch((error) => console.error(error));
   };
 
+  const handleInputChangeFile = useCallback((input: HTMLInputElement) => {
+    return async (event: Event) => {
+      event.preventDefault();
+      const file: File | null | undefined = input.files?.item(0);
+      if (!file) return;
+
+      const { getSignedUrlForTweet } = await graphqlClient.request(
+        getSignedUrlForTweetQuery,
+        {
+          imageName: file.name,
+          imageType: file.type,
+        }
+      );
+
+      if (getSignedUrlForTweet) {
+        toast.loading("Uploading...", { id: "2" });
+        await axios.put(getSignedUrlForTweet, file, {
+          headers: {
+            "Content-Type": file.type,
+          },
+        });
+        toast.success("Upload Completed", { id: "2" });
+        const url = new URL(getSignedUrlForTweet);
+        const myFilePath = `${url.origin}${url.pathname}`;
+        setImageURL(myFilePath);
+      }
+    };
+  }, []);
+
   const handleSelectImage = useCallback(() => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
+    const handlerFn = handleInputChangeFile(input);
+
+    input.addEventListener("change", handlerFn);
+
     input.click();
-  }, []);
+  }, [handleInputChangeFile]);
 
   const handleTweetBtn = useCallback(() => {
     mutate({
       content,
+      imageUrl: imageURL,
     });
     setContent("");
-  }, [mutate, content]);
+    setImageURL("");
+  }, [mutate, content, imageURL]);
 
   return (
     <div className="flex flex-col justify-between gap-2 p-4 border-y-[1px]  border-gray-400 dark:border-gray-800 hover:bg-zinc-900">
@@ -85,7 +124,13 @@ const CreateTweet = () => {
           onChange={(e) => setContent(e.target.value)}
         />
       </div>
+
       <hr className="ml-20 pb-2 border-gray-400 dark:border-gray-800" />
+      <div className="m-auto">
+        {imageURL && (
+          <Image src={imageURL} alt="TweetImage" width={200} height={200} />
+        )}
+      </div>
       <div className="flex flex-row items-center justify-between  ">
         <div className="flex flex-row gap-4 ml-20 cursor-pointer">
           <FaRegImages

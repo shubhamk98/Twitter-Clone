@@ -13,28 +13,44 @@ interface FeedCardDataProps {
 
 const SectionTwo: React.FC<FeedCardDataProps> = (props) => {
   const { data } = props;
-  
+
   return (
     <div className="flex flex-row  gap-4 p-4 border-y-[1px]  border-gray-400 dark:border-gray-800 hover:bg-zinc-900">
       <div className="flex-shrink-0">
-        {data.author?.profileImageURL && <Image
-          src={data.author?.profileImageURL}
-          alt="User"
-          width={50}
-          height={50}
-          className="rounded-full"
-        />}
+        {data.author?.profileImageURL && (
+          <Image
+            src={data.author?.profileImageURL}
+            alt="User"
+            width={50}
+            height={50}
+            className="rounded-full"
+          />
+        )}
       </div>
       <div className=" flex flex-col justify-start items-start gap-1 text-sm">
         <div className="flex flex-row gap-2">
-          <Link href={`/Home/${data.author?.id}`} className="font-bold cursor-pointer">{data.author?.firstName} {data.author?.lastName}</Link>
+          <Link
+            href={`/Home/${data.author?.id}`}
+            className="font-bold cursor-pointer"
+          >
+            {data.author?.firstName} {data.author?.lastName}
+          </Link>
           <p className="opacity-50">@{data.author?.firstName}</p>
           <p className="opacity-50">18 May</p>
         </div>
         <div>
-          <p className="text-left ">
-            {data.content}
-          </p>
+          <p className="text-left ">{data.content}</p>
+          <div className="flex justify-start items-center">
+            {data.imageUrl && (
+              <Image
+                src={data.imageUrl}
+                alt="TweetImage"
+                width={550}
+                height={500}
+                className="rounded-2xl my-2"
+              />
+            )}
+          </div>
         </div>
         <div className="flex flex-row gap-24 mt-4 cursor-pointer">
           <div className="flex flex-row gap-2 hover:text-blue-500">
