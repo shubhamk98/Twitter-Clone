@@ -103,7 +103,7 @@ const CreateTweet = () => {
   }, [mutate, content, imageURL]);
 
   return (
-    <div className="flex flex-col justify-between gap-2 p-4 border-y-[1px]  border-gray-400 dark:border-gray-800 hover:bg-zinc-900">
+    <div className="flex flex-col justify-between gap-2 p-4 border-y-[1px]  border-gray-400 dark:border-gray-800 hover:bg-zinc-200  dark:hover:bg-zinc-800">
       <div className="flex flex-row justify-between gap-4 w-full">
         <div className="w-[50px]">
           {user && (

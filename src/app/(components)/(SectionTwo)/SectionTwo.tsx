@@ -15,7 +15,7 @@ const SectionTwo: React.FC<FeedCardDataProps> = (props) => {
   const { data } = props;
 
   return (
-    <div className="flex flex-row  gap-4 p-4 border-y-[1px]  border-gray-400 dark:border-gray-800 hover:bg-zinc-900">
+    <div className="flex flex-row  gap-4 p-4 border-y-[1px]  border-gray-400 dark:border-gray-800 hover:bg-zinc-200  dark:hover:bg-zinc-800">
       <div className="flex-shrink-0">
         {data.author?.profileImageURL && (
           <Image
