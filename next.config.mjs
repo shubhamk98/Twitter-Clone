@@ -2,12 +2,21 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "image.tensorartassets.com",
-      "twitter-dev-101.s3.ap-south-1.amazonaws.com",
+    remotePatterns: [
+      {
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        hostname: "image.tensorartassets.com",
+      },
+      {
+        hostname: "twitter-dev-101.s3.ap-south-1.amazonaws.com",
+      },
     ],
   },
 };
 
 export default nextConfig;
+// "lh3.googleusercontent.com",
+//       "image.tensorartassets.com",
+//       "twitter-dev-101.s3.ap-south-1.amazonaws.com",
