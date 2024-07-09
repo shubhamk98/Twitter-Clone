@@ -7,9 +7,12 @@ import SectionThree from "./(components)/(SectionThree)/SectionThree";
 import CreateTweet from "./(components)/(SectionTwo)/CreateTweet";
 import { useGetAllTweets } from "../../hooks/tweet";
 import { Tweet } from "../../gql/graphql";
+import { useCurrentUser } from "../../hooks/user";
 
 const page = () => {
   const { tweets = [] } = useGetAllTweets();
+  const { user } = useCurrentUser();
+
   if (!tweets) {
     return new Error("No tweet Found");
   }
@@ -20,7 +23,7 @@ const page = () => {
           <SectionOne />
         </div>
         <div className="border-r-[1px] col-span-6 border-gray-400 dark:border-gray-800 overflow-scroll">
-          <CreateTweet />
+          {user && <CreateTweet />}
           {tweets.map((tweet) =>
             tweet ? <SectionTwo key={tweet?.id} data={tweet as Tweet} /> : null
           )}

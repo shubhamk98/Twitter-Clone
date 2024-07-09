@@ -21,6 +21,10 @@ const CreateTweet = () => {
   const [imageURL, setImageURL] = useState("");
 
   const handleAIText = async () => {
+    if (!content) {
+      toast.error("Please write some content first");
+      return;
+    }
     const baseString =
       " -- Make this tweet good with relevent Hashtag and emoji keep character limit to 100-200.";
     const question = content + baseString;
@@ -59,25 +63,29 @@ const CreateTweet = () => {
       const file: File | null | undefined = input.files?.item(0);
       if (!file) return;
 
-      const { getSignedUrlForTweet } = await graphqlClient.request(
-        getSignedUrlForTweetQuery,
-        {
-          imageName: file.name,
-          imageType: file.type,
+      try {
+        const { getSignedUrlForTweet } = await graphqlClient.request(
+          getSignedUrlForTweetQuery,
+          {
+            imageName: file.name,
+            imageType: file.type,
+          }
+        );
+        if (getSignedUrlForTweet) {
+          toast.loading("Uploading...", { id: "2" });
+          await axios.put(getSignedUrlForTweet, file, {
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
+          toast.success("Upload Completed", { id: "2" });
+          const url = new URL(getSignedUrlForTweet);
+          const myFilePath = `${url.origin}${url.pathname}`;
+          setImageURL(myFilePath);
         }
-      );
-
-      if (getSignedUrlForTweet) {
-        toast.loading("Uploading...", { id: "2" });
-        await axios.put(getSignedUrlForTweet, file, {
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
-        toast.success("Upload Completed", { id: "2" });
-        const url = new URL(getSignedUrlForTweet);
-        const myFilePath = `${url.origin}${url.pathname}`;
-        setImageURL(myFilePath);
+      } catch (error) {
+        toast.error("Error uploading file");
+        console.error("Error uploading file:", error);
       }
     };
   }, []);

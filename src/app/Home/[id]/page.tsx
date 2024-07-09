@@ -11,14 +11,21 @@ import { UserResponse, getUserByIdQuery } from "../../../../graphql/query/user";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "../../../../hooks/user";
 import { Loader2 } from "lucide-react";
-import { followUserMutation, unfollowUserMutation } from "../../../../graphql/query/mutation/user";
+import {
+  followUserMutation,
+  unfollowUserMutation,
+} from "../../../../graphql/query/mutation/user";
 import { useQueryClient } from "@tanstack/react-query";
+import FollowersFollowingModal from "@/app/(components)/userModal";
 
 const page = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
   const { user: currentUser } = useCurrentUser();
   const queryClient = useQueryClient();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalUsers, setModalUsers] = useState<User[]>([]);
 
   const getUserDetails = async (id: string) => {
     try {
@@ -26,6 +33,8 @@ const page = () => {
         getUserByIdQuery,
         { id }
       );
+      console.log("Fetched user info:", userInfo);
+
       setUser(userInfo.getUserById);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -34,7 +43,7 @@ const page = () => {
 
   const handleFollowUser = useCallback(async () => {
     if (!user || !user.id) return;
-  
+
     try {
       await graphqlClient.request(followUserMutation, { to: id });
       await queryClient.invalidateQueries({ queryKey: ["current-user"] });
@@ -46,7 +55,7 @@ const page = () => {
 
   const handleunFollowUser = useCallback(async () => {
     if (!user || !user.id) return;
-  
+
     try {
       await graphqlClient.request(unfollowUserMutation, { to: id });
       await queryClient.invalidateQueries({ queryKey: ["current-user"] });
@@ -60,6 +69,10 @@ const page = () => {
     if (id) {
       getUserDetails(id);
     }
+    else{
+      console.log("dffd ",id);
+      
+    }
   }, [id]);
 
   if (!user) {
@@ -69,6 +82,19 @@ const page = () => {
       </div>
     );
   }
+
+  const openModal = (title: string, users: User[]) => {
+    setModalTitle(title);
+    setModalUsers(users);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalUsers([]);
+  };
+
+  
 
   return (
     <div>
@@ -100,12 +126,32 @@ const page = () => {
             <p className="text-gray-700">@shubhamK</p>
           </div>
           <div className="flex gap-2 my-4">
-            <p className="text-gray-700 font-semibold">
-              {user.followers?.length} follower
-            </p>
-            <p className="text-gray-700 font-semibold">
-              {user.following?.length} following
-            </p>
+            { user.followers && user.following && 
+              <div>
+                <p
+                  className={`text-gray-700 font-semibold ${
+                    user?.followers?.length > 0 ? "cursor-pointer" : ""
+                  }`}
+                  onClick={() =>
+                    user.followers?.length > 0 &&
+                    openModal("Followers", user?.followers)
+                  }
+                >
+                  {user.followers?.length} follower
+                </p>
+                <p
+                  className={`text-gray-700 font-semibold ${
+                    user.following?.length > 0 ? "cursor-pointer" : ""
+                  }`}
+                  onClick={() =>
+                    user.following?.length > 0 &&
+                    openModal("Following", user.following)
+                  }
+                >
+                  {user.following?.length} following
+                </p>
+              </div>
+            }
           </div>
         </div>
         {currentUser?.id != user.id && (
@@ -123,6 +169,12 @@ const page = () => {
           tweet ? <SectionTwo key={tweet?.id} data={tweet as Tweet} /> : null
         )}
       </div>
+      <FollowersFollowingModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title={modalTitle}
+        users={modalUsers}
+      />
     </div>
   );
 };
