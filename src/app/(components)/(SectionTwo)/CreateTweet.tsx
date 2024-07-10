@@ -50,7 +50,6 @@ const CreateTweet = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.candidates[0]?.content?.parts[0]?.text);
         setContent(data.candidates[0]?.content?.parts[0]?.text);
         toast.success("Done", { id: toastID });
       })
@@ -102,6 +101,10 @@ const CreateTweet = () => {
   }, [handleInputChangeFile]);
 
   const handleTweetBtn = useCallback(() => {
+    if (!content) {
+      toast.error("Empty tweet 🙄")
+      return;
+    }
     mutate({
       content,
       imageUrl: imageURL,
