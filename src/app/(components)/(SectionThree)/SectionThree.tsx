@@ -8,6 +8,7 @@ import { useCurrentUser } from "../../../../hooks/user";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const SectionThree = () => {
   const { user, isLoading } = useCurrentUser();
@@ -42,6 +43,13 @@ const SectionThree = () => {
     return <p></p>;
   }
 
+  const handleLogout = async () => {
+    window.localStorage.removeItem("twitter_token");
+    await queryClient.invalidateQueries({ queryKey: ["current-user"] });
+    toast.success("Logged out successfully");
+  };
+  
+
   return (
     <div>
       <div className="m-5 flex flex-col gap-4">
@@ -63,7 +71,7 @@ const SectionThree = () => {
         {user?.recommendedUsers?.map((el) => (
           <div
             key={el?.id}
-            className="p-4 shadow-lg rounded-lg   bg-zinc-900"
+            className="p-4 shadow-lg rounded-lg bg-white border-[2px] dark:border-[0px] dark:bg-zinc-900 "
           >
             <p className="font-semibold text-lg mb-2 ">People you may know</p>
             <Link  href={`/Home/${el?.id}`} className="flex items-center gap-4 hover:rounded-full p-2 cursor-pointer hover:bg-zinc-200  dark:hover:bg-zinc-800">
@@ -84,6 +92,10 @@ const SectionThree = () => {
             </Link>
           </div>
         ))}
+        {
+          user &&
+            <Button onClick={handleLogout}>Logout</Button>
+        }
       </div>
     </div>
   );

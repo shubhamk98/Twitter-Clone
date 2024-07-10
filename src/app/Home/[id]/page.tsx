@@ -98,7 +98,7 @@ const page = () => {
 
   return (
     <div>
-      <div className="w-full flex flex-row items-center bg-zinc-800 h-12">
+    <div className="w-full flex flex-row items-center shadow-lg dark:bg-zinc-800 h-12">
         <div className="flex px-4 hover:cursor-pointer">
           <IoIosArrowBack size={24} />
         </div>

@@ -15,7 +15,7 @@ interface ModalProps {
 const FollowersFollowingModal: React.FC<ModalProps> = ({ isOpen, onClose, title, users }) => {
   return (
     <Dialog  open={isOpen}  >
-      <DialogContent className="bg-zinc-900 p-6 rounded-md">
+      <DialogContent className="dark:bg-zinc-900 p-6 rounded-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
