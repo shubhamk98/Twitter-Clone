@@ -1,4 +1,3 @@
-```markdown
 # Twitter Clone
 
 A Twitter Clone that allows users to create and post tweets, follow other users, and view their own profiles and the profiles of other users.
@@ -85,6 +84,3 @@ A Twitter Clone that allows users to create and post tweets, follow other users,
 ## Demo Video
 
 [Watch the demo video of the app](#) (Add link to demo video here)
-```
-
-This README file provides an overview of the project, the technologies used, and step-by-step instructions to set up the project locally for both the frontend and backend.
